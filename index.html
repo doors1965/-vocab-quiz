@@ -839,6 +839,15 @@ toggleCat('vocab');
 
 // ─── STUDENT: START ────────────────────────────
 document.getElementById('s-start').addEventListener('click',function(){
+var nameVal=document.getElementById('s-name').value.trim();
+  if(!nameVal){
+    var inp=document.getElementById('s-name');
+    inp.style.borderColor='var(--red)';
+    inp.focus();
+    showStatus('s-status','이름을 입력해 주세요! Please enter your name first.','er');
+    return;
+  }
+  document.getElementById('s-name').style.borderColor='var(--bds)';  
   var words=WL.filter(function(w){return sSel.has(w[4]);});
   if(words.length<4){showStatus('s-status','Please select at least 4 words (needed for multiple choice).','er');return;}
   if(document.getElementById('s-sh').checked) words=shuffle(words);
