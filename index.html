@@ -207,7 +207,7 @@ input[type=text]:focus{border-color:var(--acc);}
       <div class="cat-card" id="cat-vocab" onclick="toggleCat('vocab')">
         <div class="cat-header">
           <div>
-            <div class="cat-title">① 📚 Let's Study Vocabulary!</div>
+            <div class="cat-title">📚 Let's Study Vocabulary!</div>
             <div class="cat-desc">Word meaning, spelling &amp; definition quizzes</div>
           </div>
           <div class="cat-arrow" id="arrow-vocab">▼</div>
@@ -223,7 +223,7 @@ input[type=text]:focus{border-color:var(--acc);}
       <div class="cat-card" id="cat-sent" onclick="toggleCat('sent')" style="margin-top:.6rem;">
         <div class="cat-header">
           <div>
-            <div class="cat-title">② 📝 Let's Study Sentences!</div>
+            <div class="cat-title">📝 Let's Study Sentences!</div>
             <div class="cat-desc">Fill in blanks &amp; rebuild example sentences</div>
           </div>
           <div class="cat-arrow" id="arrow-sent">▶</div>
@@ -231,9 +231,9 @@ input[type=text]:focus{border-color:var(--acc);}
         <div class="cat-body" id="body-sent" style="display:none;">
           <div class="mc" id="mode-fi2"><div class="mc-t">✏️ Fill in the blank + 🇰🇷 <span class="stars">⭐⭐</span></div><div class="mc-d">Korean translation shown as scaffold</div></div>
           <div class="mc" id="mode-fi"><div class="mc-t">✏️ Fill in the blank <span class="stars">⭐⭐⭐</span></div><div class="mc-d">Type the missing word — no Korean hint</div></div>
-          <div class="mc" id="mode-scr3"><div class="mc-t">🧩 Easy Scramble — Chunks <span class="stars">⭐</span></div><div class="mc-d">Arrange meaningful phrase chunks in the right order</div></div>
-          <div class="mc" id="mode-scr2"><div class="mc-t">🌈 Medium Scramble <span class="stars">⭐⭐</span></div><div class="mc-d">Words colour-coded by part of speech as a hint</div></div>
           <div class="mc" id="mode-scr"><div class="mc-t">🔀 Sentence Scramble <span class="stars">⭐⭐⭐⭐⭐</span></div><div class="mc-d">Click words to rebuild the example sentence in order</div></div>
+          <div class="mc" id="mode-scr2"><div class="mc-t">🌈 Medium Scramble <span class="stars">⭐⭐</span></div><div class="mc-d">Words colour-coded by part of speech as a hint</div></div>
+          <div class="mc" id="mode-scr3"><div class="mc-t">🧩 Easy Scramble — Chunks <span class="stars">⭐</span></div><div class="mc-d">Arrange meaningful phrase chunks in the right order</div></div>
         </div>
       </div>
 
@@ -269,10 +269,14 @@ input[type=text]:focus{border-color:var(--acc);}
 
   <div id="s-score" style="display:none;">
     <div class="card">
+      <div style="text-align:right;margin-bottom:.25rem;">
+        <span id="sc-tasktype" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:#E3EEF7;color:#1A3A5C;letter-spacing:.3px;"></span>
+      </div>
       <div class="score-emoji" id="sc-emoji"></div>
       <div class="score-big" id="sc-pct"></div>
       <div class="score-sub" id="sc-sub"></div>
-      <div id="sc-datetime" style="text-align:center;font-size:12px;color:var(--ink3);margin-top:4px;font-family:monospace;"></div>
+      <div id="sc-datetime" style="text-align:center;font-size:14px;color:#000000;margin-top:6px;font-family:monospace;font-weight:700;letter-spacing:.3px;"></div>
+      <div id="sc-encourage" style="text-align:center;font-size:14px;font-weight:600;margin-top:10px;padding:10px 16px;border-radius:10px;"></div>
     </div>
     <div class="sgrid" id="sc-grid"></div>
     <div class="brow">
@@ -889,10 +893,10 @@ function makeQCard(w,idx){
   else if(type==='mc_en') meta+='<span class="tbadge">Korean → English</span>';
   else if(type==='write_ko') meta+='<span class="tbadge">✍️ Korean → Type English</span>';
   else if(type==='write_def') meta+='<span class="tbadge">✍️ Definition → Type English</span>';
-  else if(type==='fill2') meta+='<span class="tbadge">✏️ Fill + 🇰🇷</span>';
   else if(type==='scramble') meta+='<span class="tbadge">🔀 Scramble</span>';
   else if(type==='scramble2') meta+='<span class="tbadge">🌈 Medium Scramble</span>';
   else if(type==='scramble3') meta+='<span class="tbadge">🧩 Easy Chunks</span>';
+  else if(type==='fill2') meta+='<span class="tbadge">✏️ Fill + 🇰🇷</span>';
   else meta+='<span class="tbadge">Fill in the blank</span>';
   meta+='</div>';
   div.innerHTML=meta;
@@ -1606,6 +1610,19 @@ function showScore(){
   document.getElementById('s-quiz').style.display='none';
   document.getElementById('s-score').style.display='block';
   var emoji=pct>=90?'🏆':pct>=70?'🎉':pct>=50?'👍':'💪';
+  // Task type label
+  var taskLabels={
+    'mc':'📚 Multiple choice 객관식',
+    'fi':'✏️ Fill in the blank',
+    'fi2':'✏️ Fill in the blank + 🇰🇷',
+    'w1':'✍️ Type 1 — Korean → English',
+    'w2':'✍️ Type 2 — Definition → English',
+    'scr':'🔀 Sentence Scramble',
+    'scr2':'🌈 Medium Scramble',
+    'scr3':'🧩 Easy Scramble — Chunks'
+  };
+  var taskEl=document.getElementById('sc-tasktype');
+  if(taskEl) taskEl.textContent=taskLabels[quizMode]||quizMode;
   document.getElementById('sc-emoji').textContent=emoji;
   document.getElementById('sc-pct').textContent=pct+'%';
   var name=document.getElementById('s-name').value;
@@ -1620,6 +1637,32 @@ function showScore(){
   var timeStr=hh+':'+(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss+' '+ampm;
   var dateStr=days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
   document.getElementById('sc-datetime').textContent='📅 '+dateStr+'  ·  🕐 '+timeStr;
+  // Encouragement message
+  var msg, bg, color;
+  if(pct===100){
+    msg="🌟 Perfect score! You're absolutely amazing! Keep it up!";
+    bg='#FFF8E1'; color='#E65100';
+  } else if(pct>=90){
+    msg="🏆 Excellent work! You've mastered this vocabulary!";
+    bg='#E8F5E9'; color='#1B5E20';
+  } else if(pct>=80){
+    msg="🎉 Great job! You're almost there — just a little more practice!";
+    bg='#E3F2FD'; color='#0D47A1';
+  } else if(pct>=70){
+    msg="👍 Good effort! Review the words you missed and try again!";
+    bg='#E8EAF6'; color='#1A237E';
+  } else if(pct>=50){
+    msg="💪 Keep going! Every mistake is a chance to learn something new!";
+    bg='#FFF3E0'; color='#E65100';
+  } else if(pct>=30){
+    msg="📖 Don't give up! Read through the word list and try again — you can do it!";
+    bg='#FCE4EC'; color='#880E4F';
+  } else {
+    msg="🌱 Every expert was once a beginner! Study the list and come back stronger!";
+    bg='#F3E5F5'; color='#4A148C';
+  }
+  var encEl=document.getElementById('sc-encourage');
+  if(encEl){encEl.textContent=msg;encEl.style.background=bg;encEl.style.color=color;encEl.style.border='1.5px solid '+color;}
   document.getElementById('sc-grid').innerHTML=
     '<div class="sbox"><div class="v">'+correct+'</div><div class="l">Correct ✓</div></div>'+
     '<div class="sbox"><div class="v">'+wrong+'</div><div class="l">Wrong ✗</div></div>'+
