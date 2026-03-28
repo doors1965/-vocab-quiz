@@ -847,7 +847,7 @@ var nameVal=document.getElementById('s-name').value.trim();
     showStatus('s-status','이름을 입력해 주세요! Please enter your name first.','er');
     return;
   }
-  document.getElementById('s-name').style.borderColor='var(--bds)';  
+  document.getElementById('s-name').style.borderColor='var(--bds)';showStatus('s-status','','');  
   var words=WL.filter(function(w){return sSel.has(w[4]);});
   if(words.length<4){showStatus('s-status','Please select at least 4 words (needed for multiple choice).','er');return;}
   if(document.getElementById('s-sh').checked) words=shuffle(words);
