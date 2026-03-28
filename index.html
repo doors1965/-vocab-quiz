@@ -1717,6 +1717,17 @@ document.getElementById('sc-new').addEventListener('click',function(){
   document.getElementById('s-score').style.display='none';
   document.getElementById('s-setup').style.display='block';
 });
+function printResult(){
+  var style = document.createElement('style');
+  style.id = 'print-temp';
+  style.textContent = '@media print { #s-score { display:block !important; } }';
+  document.head.appendChild(style);
+  window.print();
+  setTimeout(function(){
+    var el = document.getElementById('print-temp');
+    if(el) el.parentNode.removeChild(el);
+  }, 1000);
+}  
 </script>
 </body>
 </html>
